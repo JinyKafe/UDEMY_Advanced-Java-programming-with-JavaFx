@@ -18,6 +18,7 @@ public class App extends Application
         Pane parent = FXMLLoader.load(getClass().getResource("MainLayout.fxml"));
         //
         final Scene scene = new Scene(parent);
+        scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
         primaryStage.setScene(scene);
         //
         primaryStage.show();
