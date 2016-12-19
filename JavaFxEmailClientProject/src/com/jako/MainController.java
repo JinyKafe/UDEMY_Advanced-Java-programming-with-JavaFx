@@ -1,6 +1,7 @@
 package com.jako;
 
 import java.net.URL;
+import java.util.Comparator;
 import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
@@ -47,8 +48,8 @@ public class MainController implements Initializable
     final ObservableList<EmailMessageBean> data = FXCollections.observableArrayList(
             new EmailMessageBean("Nákup na dnešek", "mkotkova@atlas.cz", 4000),
             new EmailMessageBean("Pozdrav z Ceske Lipy", "tomas.radonsky@seznam.cz", 5000),
-            new EmailMessageBean("Vyhra v loterii", "bigwin@google.com", 55000),
-            new EmailMessageBean("Vse nejlepsi k Vanocum", "rudolf.kotek@seznam.cz", 5000)
+            new EmailMessageBean("Vyhra v loterii", "bigwin@google.com", 5500000),
+            new EmailMessageBean("Vse nejlepsi k Vanocum", "rudolf.kotek@seznam.cz", 50)
     );
 
     @Override
@@ -62,5 +63,7 @@ public class MainController implements Initializable
         sizeColumn.setCellValueFactory(new PropertyValueFactory<>("size"));
         //
         emailTableView.setItems(data);
+        //
+        sizeColumn.setComparator(Comparator.comparing((String sizeLabel) -> EmailMessageBean.formattedValues.get(sizeLabel)));
     }
 }
