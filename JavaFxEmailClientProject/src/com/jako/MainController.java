@@ -9,10 +9,15 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.web.WebView;
 
 /**
@@ -20,6 +25,11 @@ import javafx.scene.web.WebView;
  */
 public class MainController implements Initializable
 {
+
+    @FXML
+    private TreeView<String> emailFoldersTreeView;
+
+    private TreeItem<String> root = new TreeItem<>();
 
     @FXML
     public  TableView<EmailMessageBean>           emailTableView;
@@ -65,5 +75,57 @@ public class MainController implements Initializable
         emailTableView.setItems(data);
         //
         sizeColumn.setComparator(Comparator.comparing((String sizeLabel) -> EmailMessageBean.formattedValues.get(sizeLabel)));
+        //
+        emailFoldersTreeView.setRoot(root);
+        root.setValue("example@yahoo.com");
+        {
+            final TreeItem<String> inbox = new TreeItem<>("Inbox", resolveIcon("Inbox"));
+            final TreeItem<String> sent = new TreeItem<>("Sent", resolveIcon("Sent"));
+            {
+                final TreeItem<String> subtitel1 = new TreeItem<>("Subtitel1");
+                final TreeItem<String> subtitel2 = new TreeItem<>("Subtitel2");
+                sent.getChildren().addAll(subtitel1, subtitel2);
+            }
+            final TreeItem<String> spam = new TreeItem<>("Spam", resolveIcon("Spam"));
+            final TreeItem<String> trash = new TreeItem<>("Trash", resolveIcon("Trash"));
+            root.getChildren().addAll(inbox, sent, spam, trash);
+        }
+        root.setExpanded(true);
+    }
+
+    private Node resolveIcon(String treeItemValue)
+    {
+        ImageView imageView;
+        try
+        {
+            final String lowerCaseTreeItemValue = treeItemValue.contains("@") ? "email" : treeItemValue.toLowerCase();
+            switch (lowerCaseTreeItemValue)
+            {
+                case "inbox":
+                    imageView = new ImageView(new Image(getClass().getResourceAsStream("images/inbox.png")));
+                    break;
+                case "sent":
+                    imageView = new ImageView(new Image(getClass().getResourceAsStream("images/sent2.png")));
+                    break;
+                case "spam":
+                    imageView = new ImageView(new Image(getClass().getResourceAsStream("images/spam.png")));
+                    break;
+                case "email":
+                    imageView = new ImageView(new Image(getClass().getResourceAsStream("images/email.png")));
+                    break;
+                default:
+                    imageView = new ImageView(new Image(getClass().getResourceAsStream("images/folder.png")));
+                    break;
+            }
+        }
+        catch (Exception e)
+        {
+            System.out.println("Invalid image location!!!");
+            e.printStackTrace();
+            imageView = new ImageView();
+        }
+        imageView.setFitHeight(16);
+        imageView.setFitWidth(16);
+        return imageView;
     }
 }

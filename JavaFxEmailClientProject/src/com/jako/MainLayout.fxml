@@ -15,7 +15,7 @@
       <Button fx:id="Button1" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#Button1Action" text="Button" />
       <Button layoutX="74.0" layoutY="14.0" mnemonicParsing="false" text="Button" />
       <Button layoutX="134.0" layoutY="14.0" mnemonicParsing="false" text="Button" />
-      <TreeView layoutX="14.0" layoutY="48.0" prefHeight="508.0" prefWidth="176.0" AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="48.0" />
+      <TreeView fx:id="emailFoldersTreeView" layoutX="14.0" layoutY="48.0" prefHeight="508.0" prefWidth="176.0" AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="48.0" />
       <TableView fx:id="emailTableView" layoutX="190.0" layoutY="48.0" prefHeight="200.0" prefWidth="406.0" AnchorPane.leftAnchor="190.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="48.0">
          <columns>
             <TableColumn fx:id="subjectColumn" prefWidth="440.0" text="Subject" />
