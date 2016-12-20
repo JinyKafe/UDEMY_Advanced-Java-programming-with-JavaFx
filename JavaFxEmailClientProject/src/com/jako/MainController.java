@@ -1,13 +1,16 @@
 package com.jako;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Comparator;
 import java.util.ResourceBundle;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -19,7 +22,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.web.WebView;
+import javafx.stage.Stage;
 
 /**
  * Created by JaKotek on 12.12.2016.
@@ -35,6 +40,8 @@ public class MainController implements Initializable
     private SampleData       sampleData  = new SampleData();
 
     private MenuItem         showDetails = new MenuItem("show details...");
+
+    private Singleton                             singleton;
 
     @FXML
     public  TableView<EmailMessageBean>           emailTableView;
@@ -63,6 +70,7 @@ public class MainController implements Initializable
     @Override
     public void initialize(URL location, ResourceBundle resources)
     {
+        singleton = Singleton.getInstance();
         subjectColumn.setCellValueFactory(new PropertyValueFactory<>("subject"));
         senderColumn.setCellValueFactory(new PropertyValueFactory<>("sender"));
         sizeColumn.setCellValueFactory(new PropertyValueFactory<>("size"));
@@ -99,10 +107,26 @@ public class MainController implements Initializable
             if (selectedItem != null)
             {
                 messageRenderer.getEngine().loadContent(selectedItem.getContent());
+                singleton.setMessageBean(selectedItem);
             }
         });
         //
-        showDetails.setOnAction((ActionEvent event) -> System.out.println("menu item clicked!!"));
+        showDetails.setOnAction((ActionEvent event) ->
+        {
+            final Stage stage = new Stage();
+            try
+            {
+                final Pane pane = FXMLLoader.load(getClass().getResource("EmailDetailsLayout.fxml"));
+                final Scene scene = new Scene(pane);
+                scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
+                stage.setScene(scene);
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+            stage.show();
+        });
     }
 
     private Node resolveIcon(String treeItemValue)
