@@ -10,24 +10,33 @@ import javafx.beans.property.SimpleStringProperty;
  */
 public class EmailMessageBean
 {
+
     public static Map<String, Integer> formattedValues = new HashMap<>();
 
-    private SimpleStringProperty sender;
+    private final SimpleStringProperty content;
 
-    private SimpleStringProperty subject;
+    private       SimpleStringProperty sender;
 
-    private SimpleStringProperty size;
+    private       SimpleStringProperty subject;
 
-    public EmailMessageBean(String sender, String subject, int size)
+    private       SimpleStringProperty size;
+
+    public EmailMessageBean(String subject, String sender, int size, String content)
     {
         this.sender = new SimpleStringProperty(sender);
         this.subject = new SimpleStringProperty(subject);
         this.size = new SimpleStringProperty(formatSize(size));
+        this.content = new SimpleStringProperty(content);
     }
 
     public String getSender()
     {
         return sender.get();
+    }
+
+    public String getContent()
+    {
+        return content.get();
     }
 
     public String getSubject()

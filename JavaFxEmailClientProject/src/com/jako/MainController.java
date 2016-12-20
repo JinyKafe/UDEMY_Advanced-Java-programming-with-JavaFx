@@ -4,13 +4,13 @@ import java.net.URL;
 import java.util.Comparator;
 import java.util.ResourceBundle;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TreeItem;
@@ -18,6 +18,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.web.WebView;
 
 /**
@@ -29,7 +30,11 @@ public class MainController implements Initializable
     @FXML
     private TreeView<String> emailFoldersTreeView;
 
-    private TreeItem<String> root = new TreeItem<>();
+    private TreeItem<String> root        = new TreeItem<>();
+
+    private SampleData       sampleData  = new SampleData();
+
+    private MenuItem         showDetails = new MenuItem("show details...");
 
     @FXML
     public  TableView<EmailMessageBean>           emailTableView;
@@ -55,42 +60,49 @@ public class MainController implements Initializable
         System.out.println("button1 clicked");
     }
 
-    final ObservableList<EmailMessageBean> data = FXCollections.observableArrayList(
-            new EmailMessageBean("Nákup na dnešek", "mkotkova@atlas.cz", 4000),
-            new EmailMessageBean("Pozdrav z Ceske Lipy", "tomas.radonsky@seznam.cz", 5000),
-            new EmailMessageBean("Vyhra v loterii", "bigwin@google.com", 5500000),
-            new EmailMessageBean("Vse nejlepsi k Vanocum", "rudolf.kotek@seznam.cz", 50)
-    );
-
     @Override
     public void initialize(URL location, ResourceBundle resources)
     {
-        messageRenderer.getEngine().loadContent(
-                "<html>Lorem Ipsum je demonstrativní výplňový text používaný v tiskařském a knihařském průmyslu. Lorem Ipsum je považováno za standard v této oblasti už od začátku 16. století, kdy dnes neznámý tiskař vzal kusy textu a na jejich základě vytvořil speciální vzorovou knihu. Jeho odkaz nevydržel pouze pět století, on přežil i nástup elektronické sazby v podstatě beze změny. Nejvíce popularizováno bylo Lorem Ipsum v šedesátých letech 20. století, kdy byly vydávány speciální vzorníky s jeho pasážemi a později pak díky počítačovým DTP programům jako Aldus PageMaker.</html>");
-        //
         subjectColumn.setCellValueFactory(new PropertyValueFactory<>("subject"));
         senderColumn.setCellValueFactory(new PropertyValueFactory<>("sender"));
         sizeColumn.setCellValueFactory(new PropertyValueFactory<>("size"));
-        //
-        emailTableView.setItems(data);
         //
         sizeColumn.setComparator(Comparator.comparing((String sizeLabel) -> EmailMessageBean.formattedValues.get(sizeLabel)));
         //
         emailFoldersTreeView.setRoot(root);
         root.setValue("example@yahoo.com");
+        final TreeItem<String> inbox = new TreeItem<>("Inbox", resolveIcon("Inbox"));
+        final TreeItem<String> sent = new TreeItem<>("Sent", resolveIcon("Sent"));
         {
-            final TreeItem<String> inbox = new TreeItem<>("Inbox", resolveIcon("Inbox"));
-            final TreeItem<String> sent = new TreeItem<>("Sent", resolveIcon("Sent"));
-            {
-                final TreeItem<String> subtitel1 = new TreeItem<>("Subtitel1");
-                final TreeItem<String> subtitel2 = new TreeItem<>("Subtitel2");
-                sent.getChildren().addAll(subtitel1, subtitel2);
-            }
-            final TreeItem<String> spam = new TreeItem<>("Spam", resolveIcon("Spam"));
-            final TreeItem<String> trash = new TreeItem<>("Trash", resolveIcon("Trash"));
-            root.getChildren().addAll(inbox, sent, spam, trash);
+            final TreeItem<String> subtitel1 = new TreeItem<>("Subtitel1");
+            final TreeItem<String> subtitel2 = new TreeItem<>("Subtitel2");
+            sent.getChildren().addAll(subtitel1, subtitel2);
         }
+        final TreeItem<String> spam = new TreeItem<>("Spam", resolveIcon("Spam"));
+        final TreeItem<String> trash = new TreeItem<>("Trash", resolveIcon("Trash"));
+        root.getChildren().addAll(inbox, sent, spam, trash);
         root.setExpanded(true);
+        //
+        emailTableView.setContextMenu(new ContextMenu(showDetails));
+        //
+        emailFoldersTreeView.setOnMouseClicked((MouseEvent event) ->
+        {
+            TreeItem<String> item = emailFoldersTreeView.getSelectionModel().getSelectedItem();
+            if (item != null)
+            {
+                emailTableView.setItems(sampleData.emailFolders.get(item.getValue()));
+            }
+        });
+        emailTableView.setOnMouseClicked((MouseEvent event) ->
+        {
+            final EmailMessageBean selectedItem = emailTableView.getSelectionModel().getSelectedItem();
+            if (selectedItem != null)
+            {
+                messageRenderer.getEngine().loadContent(selectedItem.getContent());
+            }
+        });
+        //
+        showDetails.setOnAction((ActionEvent event) -> System.out.println("menu item clicked!!"));
     }
 
     private Node resolveIcon(String treeItemValue)
