@@ -1,15 +1,16 @@
-package com.jako;
+package com.jako.controller;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.Comparator;
 import java.util.ResourceBundle;
 
+import com.jako.model.EmailMessageBean;
+import com.jako.model.SampleData;
+import com.jako.model.Singleton;
+import com.jako.view.ViewFactory;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
@@ -19,10 +20,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
@@ -31,6 +29,9 @@ import javafx.stage.Stage;
  */
 public class MainController implements Initializable
 {
+
+    @FXML
+    public  TableView<EmailMessageBean>           emailTableView;
 
     @FXML
     private TreeView<String> emailFoldersTreeView;
@@ -42,9 +43,6 @@ public class MainController implements Initializable
     private MenuItem         showDetails = new MenuItem("show details...");
 
     private Singleton                             singleton;
-
-    @FXML
-    public  TableView<EmailMessageBean>           emailTableView;
 
     @FXML
     private WebView                               messageRenderer;
@@ -70,6 +68,7 @@ public class MainController implements Initializable
     @Override
     public void initialize(URL location, ResourceBundle resources)
     {
+        final ViewFactory viewFactory = new ViewFactory();
         singleton = Singleton.getInstance();
         subjectColumn.setCellValueFactory(new PropertyValueFactory<>("subject"));
         senderColumn.setCellValueFactory(new PropertyValueFactory<>("sender"));
@@ -79,15 +78,15 @@ public class MainController implements Initializable
         //
         emailFoldersTreeView.setRoot(root);
         root.setValue("example@yahoo.com");
-        final TreeItem<String> inbox = new TreeItem<>("Inbox", resolveIcon("Inbox"));
-        final TreeItem<String> sent = new TreeItem<>("Sent", resolveIcon("Sent"));
+        final TreeItem<String> inbox = new TreeItem<>("Inbox", viewFactory.resolveIcon("Inbox"));
+        final TreeItem<String> sent = new TreeItem<>("Sent", viewFactory.resolveIcon("Sent"));
         {
             final TreeItem<String> subtitel1 = new TreeItem<>("Subtitel1");
             final TreeItem<String> subtitel2 = new TreeItem<>("Subtitel2");
             sent.getChildren().addAll(subtitel1, subtitel2);
         }
-        final TreeItem<String> spam = new TreeItem<>("Spam", resolveIcon("Spam"));
-        final TreeItem<String> trash = new TreeItem<>("Trash", resolveIcon("Trash"));
+        final TreeItem<String> spam = new TreeItem<>("Spam", viewFactory.resolveIcon("Spam"));
+        final TreeItem<String> trash = new TreeItem<>("Trash", viewFactory.resolveIcon("Trash"));
         root.getChildren().addAll(inbox, sent, spam, trash);
         root.setExpanded(true);
         //
@@ -114,54 +113,9 @@ public class MainController implements Initializable
         showDetails.setOnAction((ActionEvent event) ->
         {
             final Stage stage = new Stage();
-            try
-            {
-                final Pane pane = FXMLLoader.load(getClass().getResource("EmailDetailsLayout.fxml"));
-                final Scene scene = new Scene(pane);
-                scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
-                stage.setScene(scene);
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
+            final Scene scene = viewFactory.getEmailDetailsScene();
+            stage.setScene(scene);
             stage.show();
         });
-    }
-
-    private Node resolveIcon(String treeItemValue)
-    {
-        ImageView imageView;
-        try
-        {
-            final String lowerCaseTreeItemValue = treeItemValue.contains("@") ? "email" : treeItemValue.toLowerCase();
-            switch (lowerCaseTreeItemValue)
-            {
-                case "inbox":
-                    imageView = new ImageView(new Image(getClass().getResourceAsStream("images/inbox.png")));
-                    break;
-                case "sent":
-                    imageView = new ImageView(new Image(getClass().getResourceAsStream("images/sent2.png")));
-                    break;
-                case "spam":
-                    imageView = new ImageView(new Image(getClass().getResourceAsStream("images/spam.png")));
-                    break;
-                case "email":
-                    imageView = new ImageView(new Image(getClass().getResourceAsStream("images/email.png")));
-                    break;
-                default:
-                    imageView = new ImageView(new Image(getClass().getResourceAsStream("images/folder.png")));
-                    break;
-            }
-        }
-        catch (Exception e)
-        {
-            System.out.println("Invalid image location!!!");
-            e.printStackTrace();
-            imageView = new ImageView();
-        }
-        imageView.setFitHeight(16);
-        imageView.setFitWidth(16);
-        return imageView;
     }
 }

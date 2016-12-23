@@ -1,4 +1,4 @@
-package com.jako;
+package com.jako.model;
 
 /**
  * Created by JaKotek on 20.12.2016.

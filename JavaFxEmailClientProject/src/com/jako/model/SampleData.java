@@ -1,4 +1,4 @@
-package com.jako;
+package com.jako.model;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package com.jako;
+package com.jako.model;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,26 +29,6 @@ public class EmailMessageBean
         this.content = new SimpleStringProperty(content);
     }
 
-    public String getSender()
-    {
-        return sender.get();
-    }
-
-    public String getContent()
-    {
-        return content.get();
-    }
-
-    public String getSubject()
-    {
-        return subject.get();
-    }
-
-    public String getSize()
-    {
-        return size.get();
-    }
-
     private String formatSize(int size)
     {
         String returnValue;
@@ -70,5 +50,25 @@ public class EmailMessageBean
         }
         formattedValues.put(returnValue, size);
         return returnValue;
+    }
+
+    public String getSender()
+    {
+        return sender.get();
+    }
+
+    public String getContent()
+    {
+        return content.get();
+    }
+
+    public String getSubject()
+    {
+        return subject.get();
+    }
+
+    public String getSize()
+    {
+        return size.get();
     }
 }
