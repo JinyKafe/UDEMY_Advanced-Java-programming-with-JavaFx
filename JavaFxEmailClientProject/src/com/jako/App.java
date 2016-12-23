@@ -17,7 +17,6 @@ public class App extends Application
         final ViewFactory viewFactory = new ViewFactory();
         final Scene scene = viewFactory.getMainScene();
         primaryStage.setScene(scene);
-        //
         primaryStage.show();
     }
 
