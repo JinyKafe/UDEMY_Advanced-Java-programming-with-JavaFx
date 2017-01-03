@@ -12,19 +12,24 @@ import javafx.scene.web.WebView;
 /**
  * Created by JaKotek on 20.12.2016.
  */
-public class EmailDetailController implements Initializable
+public class EmailDetailController extends AbstractController implements Initializable
 {
 
-    @FXML
-    private Label     senderLabel;
+    private ModelAccess modelAccess;
 
     @FXML
-    private WebView   webView;
+    private Label       senderLabel;
 
     @FXML
-    private Label     subjectLabel;
+    private WebView     webView;
 
-    private Singleton singleton;
+    @FXML
+    private Label       subjectLabel;
+
+    public EmailDetailController(ModelAccess modelAccess)
+    {
+        super(modelAccess);
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources)

@@ -27,22 +27,22 @@ import javafx.stage.Stage;
 /**
  * Created by JaKotek on 12.12.2016.
  */
-public class MainController implements Initializable
+public class MainController extends AbstractController implements Initializable
 {
 
-    @FXML
-    public  TableView<EmailMessageBean>           emailTableView;
+    private ModelAccess                 modelAccess;
 
     @FXML
-    private TreeView<String> emailFoldersTreeView;
+    public  TableView<EmailMessageBean> emailTableView;
+
+    @FXML
+    private TreeView<String>            emailFoldersTreeView;
 
     private TreeItem<String> root        = new TreeItem<>();
 
     private SampleData       sampleData  = new SampleData();
 
     private MenuItem         showDetails = new MenuItem("show details...");
-
-    private Singleton                             singleton;
 
     @FXML
     private WebView                               messageRenderer;
@@ -58,6 +58,11 @@ public class MainController implements Initializable
 
     @FXML
     private TableColumn<EmailMessageBean, String> subjectColumn;
+
+    public MainController(ModelAccess modelAccess)
+    {
+        super(modelAccess);
+    }
 
     @FXML
     void Button1Action(ActionEvent event)
