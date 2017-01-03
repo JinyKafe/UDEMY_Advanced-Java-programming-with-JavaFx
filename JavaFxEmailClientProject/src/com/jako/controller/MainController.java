@@ -29,10 +29,8 @@ import javafx.stage.Stage;
 public class MainController extends AbstractController implements Initializable
 {
 
-    private ModelAccess                 modelAccess;
-
     @FXML
-    public  TableView<EmailMessageBean> emailTableView;
+    private  TableView<EmailMessageBean> emailTableView;
 
     @FXML
     private TreeView<String>            emailFoldersTreeView;
