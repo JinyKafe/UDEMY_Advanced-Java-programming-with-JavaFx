@@ -2,6 +2,8 @@ package com.jako.view;
 
 import java.io.IOException;
 
+import javax.naming.OperationNotSupportedException;
+
 import com.jako.controller.AbstractController;
 import com.jako.controller.EmailDetailController;
 import com.jako.controller.MainController;
@@ -19,28 +21,40 @@ import javafx.scene.image.ImageView;
 public class ViewFactory
 {
 
-    public static final String      DEFAULT_CSS               = "style.css";
+    public static        ViewFactory defaultFactory            = new ViewFactory();
 
-    public static final String      MAIN_LAYOUT_FXML          = "MainLayout.fxml";
+    private static       boolean     mainViewInitilized        = false;
 
-    public static final String      EMAIL_DETAILS_LAYOUT_FXML = "EmailDetailsLayout.fxml";
+    private static final String      DEFAULT_CSS               = "style.css";
 
-    private             ModelAccess modelAccess               = new ModelAccess();
+    private static final String      MAIN_LAYOUT_FXML          = "MainLayout.fxml";
+
+    private static final String      EMAIL_DETAILS_LAYOUT_FXML = "EmailDetailsLayout.fxml";
+
+    private              ModelAccess modelAccess               = new ModelAccess();
 
     private MainController        mainController;
 
     private EmailDetailController emailDetailController;
 
-    public Scene getMainScene()
+    public Scene getMainScene() throws OperationNotSupportedException
     {
-        mainController = new MainController(modelAccess);
-        return initializeScene(MAIN_LAYOUT_FXML, mainController);
+        if (!mainViewInitilized)
+        {
+            mainController = new MainController(modelAccess);
+            mainViewInitilized = true;
+            return initializeScene(MAIN_LAYOUT_FXML, mainController);
+        }
+        else
+        {
+            throw new OperationNotSupportedException("Main Scene already initialized");
+        }
     }
 
     public Scene getEmailDetailsScene()
     {
         emailDetailController = new EmailDetailController(modelAccess);
-        return initializeScene(EMAIL_DETAILS_LAYOUT_FXML, mainController);
+        return initializeScene(EMAIL_DETAILS_LAYOUT_FXML, emailDetailController);
     }
 
     public Node resolveIcon(String treeItemValue)

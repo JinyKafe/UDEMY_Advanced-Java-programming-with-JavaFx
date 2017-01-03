@@ -6,7 +6,6 @@ import java.util.ResourceBundle;
 
 import com.jako.model.EmailMessageBean;
 import com.jako.model.SampleData;
-import com.jako.model.Singleton;
 import com.jako.view.ViewFactory;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -73,8 +72,7 @@ public class MainController extends AbstractController implements Initializable
     @Override
     public void initialize(URL location, ResourceBundle resources)
     {
-        final ViewFactory viewFactory = new ViewFactory();
-        singleton = Singleton.getInstance();
+        ViewFactory viewFactory = ViewFactory.defaultFactory;
         subjectColumn.setCellValueFactory(new PropertyValueFactory<>("subject"));
         senderColumn.setCellValueFactory(new PropertyValueFactory<>("sender"));
         sizeColumn.setCellValueFactory(new PropertyValueFactory<>("size"));
@@ -110,8 +108,8 @@ public class MainController extends AbstractController implements Initializable
             final EmailMessageBean selectedItem = emailTableView.getSelectionModel().getSelectedItem();
             if (selectedItem != null)
             {
+                getModelAccess().setSelectedMessage(selectedItem);
                 messageRenderer.getEngine().loadContent(selectedItem.getContent());
-                singleton.setMessageBean(selectedItem);
             }
         });
         //

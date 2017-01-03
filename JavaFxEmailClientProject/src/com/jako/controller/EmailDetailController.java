@@ -3,11 +3,16 @@ package com.jako.controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import com.jako.model.Singleton;
+import javax.naming.OperationNotSupportedException;
+
+import com.jako.model.EmailMessageBean;
+import com.jako.view.ViewFactory;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.web.WebView;
+import javafx.stage.Stage;
 
 /**
  * Created by JaKotek on 20.12.2016.
@@ -18,13 +23,23 @@ public class EmailDetailController extends AbstractController implements Initial
     private ModelAccess modelAccess;
 
     @FXML
-    private Label       senderLabel;
+    void IllegalOperationAction() throws OperationNotSupportedException
+    {
+        ViewFactory viewFactory = new ViewFactory();
+        Scene scene = viewFactory.getMainScene();
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.show();
+    }
 
     @FXML
-    private WebView     webView;
+    private Label   senderLabel;
 
     @FXML
-    private Label       subjectLabel;
+    private WebView webView;
+
+    @FXML
+    private Label   subjectLabel;
 
     public EmailDetailController(ModelAccess modelAccess)
     {
@@ -34,10 +49,10 @@ public class EmailDetailController extends AbstractController implements Initial
     @Override
     public void initialize(URL location, ResourceBundle resources)
     {
-        singleton = Singleton.getInstance();
+        EmailMessageBean selectedMessage = getModelAccess().getSelectedMessage();
         System.out.println("EmailDetailController intitialized");
-        subjectLabel.setText("Subject: " + singleton.getMessageBean().getSubject());
-        senderLabel.setText("Sender: " + singleton.getMessageBean().getSender());
-        webView.getEngine().loadContent(singleton.getMessageBean().getContent());
+        subjectLabel.setText("Subject: " + selectedMessage.getSubject());
+        senderLabel.setText("Sender: " + selectedMessage.getSender());
+        webView.getEngine().loadContent(selectedMessage.getContent());
     }
 }
