@@ -3,12 +3,13 @@ package com.jako.model;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.jako.model.table.AbstractTableItem;
 import javafx.beans.property.SimpleStringProperty;
 
 /**
  * Created by JaKotek on 14.12.2016.
  */
-public class EmailMessageBean
+public class EmailMessageBean extends AbstractTableItem
 {
 
     public static Map<String, Integer> formattedValues = new HashMap<>();
@@ -21,8 +22,9 @@ public class EmailMessageBean
 
     private       SimpleStringProperty size;
 
-    public EmailMessageBean(String subject, String sender, int size, String content)
+    public EmailMessageBean(String subject, String sender, int size, String content, boolean isRead)
     {
+        super(isRead);
         this.sender = new SimpleStringProperty(sender);
         this.subject = new SimpleStringProperty(subject);
         this.size = new SimpleStringProperty(formatSize(size));

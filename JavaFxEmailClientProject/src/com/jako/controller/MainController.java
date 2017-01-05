@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 
 import com.jako.model.EmailMessageBean;
 import com.jako.model.SampleData;
+import com.jako.model.table.BoldableRowFactory;
 import com.jako.view.ViewFactory;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -70,6 +71,7 @@ public class MainController extends AbstractController implements Initializable
     @Override
     public void initialize(URL location, ResourceBundle resources)
     {
+        emailTableView.setRowFactory(param -> new BoldableRowFactory<EmailMessageBean>());
         ViewFactory viewFactory = ViewFactory.defaultFactory;
         subjectColumn.setCellValueFactory(new PropertyValueFactory<>("subject"));
         senderColumn.setCellValueFactory(new PropertyValueFactory<>("sender"));
