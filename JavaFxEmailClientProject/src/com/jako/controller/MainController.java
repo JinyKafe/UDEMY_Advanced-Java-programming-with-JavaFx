@@ -31,7 +31,7 @@ public class MainController extends AbstractController implements Initializable
 {
 
     @FXML
-    private  TableView<EmailMessageBean> emailTableView;
+    private TableView<EmailMessageBean> emailTableView;
 
     @FXML
     private TreeView<String>            emailFoldersTreeView;
